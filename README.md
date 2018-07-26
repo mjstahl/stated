@@ -1,7 +1,7 @@
 # Transiton
 That which transitions between states.
 
-`transiton(<initial: String>, <states: Object>) -> <transiton: Object>`
+`new Transiton(<states: Object>) -> <Transiton>`
 
 To create a Transiton pass a states object. A valid states object must, at a
 minimum, have an 'initial' state object.
@@ -13,7 +13,7 @@ const h20 = new Transiton({
     // actions must reference existing states
     FROZEN: 'ice',
     BOILED: 'steam',
-    // can be any JS value, if 'value' is a function it will be called
+    // Number, Array, Function, Object, etc
     value: '60F'
   },
   ice: {
@@ -24,7 +24,8 @@ const h20 = new Transiton({
   steam: {
     COOLED: 'water',
     FROZEN: 'ice',
-    value: '212F'
+    // if 'value' is a function it will be called
+    value() { return '212F' }
   }
 });
 
@@ -34,7 +35,7 @@ h20.value; //-> '60F'
 
 `transiton.actions -> <actions: Object>`
 
-Return an object with edges as properties and associated values. Provided to
+Return an object with actions as properties and associated values. Provided to
 avoid typos when traversing states. For example:
 
 ```js
@@ -44,7 +45,7 @@ h20.actions;
 //-> { 'FROZEN': 'FROZEN', 'BOILED': 'BOILED' }
 ```
 
-`transiton.has(<edge: String>) -> <transiton: Object>`
+`transiton.has(<action: String>) -> <Transiton>`
 
 Transition from the current state to a new state. `<transiton>.state` now returns
 the name of the new state. `<transiton>.value` will return the value of the new
@@ -55,7 +56,7 @@ attempting to call `has` with an invalid action will cause a runtime error
 as that action will not exist on `<transiton>.actions`.
 
 ```js
-  h20.has(machine.actions.FROZEN);
+  h20.has(h20.actions.FROZEN);
 
   h20.state; //-> 'ice'
   h20.value; //-> '32F'
@@ -74,10 +75,11 @@ Return the name of the transiton's current state.
 `transiton.value -> <value: Any>`
 
 Returns the value of the current state if one exists; returns `undefined`
-if not.
+if not. If the type of 'value' is `'function'`, it will be evaluated and the
+result will be returned.
 
 ```js
-  h20.has(machine.actions.BOILED);
+  h20.has(h20.actions.BOILED);
   h20.value;
 
   //-> '212F'
