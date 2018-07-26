@@ -33,18 +33,6 @@ h20.state; //-> 'initial'
 h20.value; //-> '60F'
 ```
 
-`transiton.actions -> <actions: Object>`
-
-Return an object with actions as properties and associated values. Provided to
-avoid typos when traversing states. For example:
-
-```js
-// starting with the example above
-h20.actions;
-
-//-> { 'FROZEN': 'FROZEN', 'BOILED': 'BOILED' }
-```
-
 `transiton.has(<action: String>) -> <Transiton>`
 
 Transition from the current state to a new state. `<transiton>.state` now returns
@@ -60,6 +48,18 @@ as that action will not exist on `<transiton>.actions`.
 
   h20.state; //-> 'ice'
   h20.value; //-> '32F'
+```
+
+`transiton.actions -> <actions: Object>`
+
+Return an object with actions as properties and associated values. Provided to
+avoid typos when traversing states. For example:
+
+```js
+// starting with the example above
+h20.actions;
+
+//-> { 'FROZEN': 'FROZEN', 'BOILED': 'BOILED' }
 ```
 
 `transiton.state -> <state: String>`
