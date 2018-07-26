@@ -3,7 +3,9 @@
   "version": "0.1.0",
   "description": "That which transitions between states",
   "main": "index.js",
-  "scripts": {},
+  "scripts": {
+    "test": "ava"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/mjstahl/transiton.git"
@@ -18,5 +20,8 @@
   "bugs": {
     "url": "https://github.com/mjstahl/transiton/issues"
   },
-  "homepage": "https://github.com/mjstahl/transiton#readme"
+  "homepage": "https://github.com/mjstahl/transiton#readme",
+  "devDependencies": {
+    "ava": "1.0.0-beta.6"
+  }
 }

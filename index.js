@@ -1,13 +1,11 @@
 'use strict'
 
-module.exports = Transiton;
-
 class Transiton {
   constructor(initial, states) {
     this.state = initial;
     this.states = states;
     if (!states[initial]) {
-      throw 'A valid initial initial state much be provided';
+      throw 'A valid initial state much be provided';
     }
   }
 
@@ -34,3 +32,5 @@ class Transiton {
 
   get value() { return this.states[this.state].value; }
 }
+
+module.exports = Transiton;
