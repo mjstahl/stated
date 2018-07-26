@@ -12,10 +12,10 @@ class Transiton {
     if (!transitionTo) {
       throw `'${action}' does not exist as an action of '${this.state}'`;
     }
-    if (typeof states[transitionTo] !== 'string') {
+    if (typeof transitionTo !== 'string') {
       throw `'${transitionTo}' is not a valid state. It must be a string.`
     }
-    if (!states[transitionTo]) {
+    if (!this.states[transitionTo]) {
       throw `'${transitionTo}' does not exist`;
     }
     this.state = transitionTo;
@@ -23,7 +23,7 @@ class Transiton {
 
   get actions() {
     const actions = {};
-    Object.keys(this.states)
+    Object.keys(this.states[this.state])
       .filter(s => s !== 'value').forEach(a => actions[a] = a);
     return actions;
   }
