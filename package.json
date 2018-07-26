@@ -1,0 +1,22 @@
+{
+  "name": "transiton",
+  "version": "0.1.0",
+  "description": "That which transitions between states",
+  "main": "index.js",
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mjstahl/transiton.git"
+  },
+  "keywords": [
+    "state",
+    "machine",
+    "finite",
+    "automata"
+  ],
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mjstahl/transiton/issues"
+  },
+  "homepage": "https://github.com/mjstahl/transiton#readme"
+}
