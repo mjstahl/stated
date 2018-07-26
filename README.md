@@ -3,33 +3,32 @@ That which transitions between states.
 
 `transiton(<initial: String>, <states: Object>) -> <transiton: Object>`
 
-To create a transiton pass a starting state, and a states object. A states
-object has a structure as follows:
+To create a Transiton pass a states object. A valid states object must, at a
+minimum, have an 'initial' state object.
 
 ```js
 const Transiton = require('transiton');
-const h20 = new Transiton('water', {
-  // will be the starting state is no initial state name is provided
-  'water': {
-    // an action's value can only be a string, and must be a defined state name
-    'FROZEN': 'ice',
-    'BOILED': 'steam',
-    // any value, string, array, object, etc.
-    'value': '60F'
+const h20 = new Transiton({
+  initial: {
+    // actions must reference existing states
+    FROZEN: 'ice',
+    BOILED: 'steam',
+    // can be any JS value, if 'value' is a function it will be called
+    value: '60F'
   },
-  'ice': {
-    'BOILED': 'steam',
-    'WARMED': 'water',
-    'value': '32F'
+  ice: {
+    BOILED: 'steam',
+    WARMED: 'water',
+    value: '32F'
   },
-  'steam': {
-    'COOLED': 'water',
-    'FROZEN': 'ice',
-    'value': '212F'
+  steam: {
+    COOLED: 'water',
+    FROZEN: 'ice',
+    value: '212F'
   }
 });
 
-h20.state; //-> 'water'
+h20.state; //-> 'initial'
 h20.value; //-> '60F'
 ```
 

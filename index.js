@@ -1,12 +1,10 @@
 'use strict'
 
 class Transiton {
-  constructor(initial, states) {
-    this.state = initial;
+  constructor(states) {
+    if (!states['initial']) throw `A valid 'initial' state must be provided`;
     this.states = states;
-    if (!states[initial]) {
-      throw 'A valid initial state much be provided';
-    }
+    this.state = 'initial';
   }
 
   has(action) {
@@ -30,7 +28,10 @@ class Transiton {
     return actions;
   }
 
-  get value() { return this.states[this.state].value; }
+  get value() {
+    const value = this.states[this.state].value;
+    return (typeof value === 'function') ? value() : value;
+  }
 }
 
 module.exports = Transiton;
