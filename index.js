@@ -1,31 +1,36 @@
-module.exports = function transiton(initial, states) {
-  if (arguments.length === 1) {
-    states = initial;
-    initial = undefined;
-  }
-  var state = initial || 'start';
-  if (!states[state]) {
-    throw 'An initial state of \'' + state + '\' must be provided.';
-  }
+'use strict'
 
-  var actions = {};
-  Object.keys(states[state]).filter(function(s) {
-    return s !== 'value';
-  }).forEach(function(a) {
-    actions[a] = a;
-  });
+module.exports = Transiton;
 
-  var transiton = {
-    actions: actions,
-    state: state,
-    has: function has(action) {
-      if (!state[action]) {
-        throw '\'' + action + '\' does not exist as an action of \''
-          + state + '\'';
-      }
-      // TODO - finish up this refactoring
+class Transiton {
+  constructor(initial, states) {
+    this.state = initial;
+    this.states = states;
+    if (!states[initial]) {
+      throw 'A valid initial initial state much be provided';
     }
-  };
+  }
 
-  return transiton;
-};
+  has(action) {
+    const transitionTo = this.states[this.state][action];
+    if (!transitionTo) {
+      throw `'${action}' does not exist as an action of '${this.state}'`;
+    }
+    if (typeof states[transitionTo] !== 'string') {
+      throw `'${transitionTo}' is not a valid state. It must be a string.`
+    }
+    if (!states[transitionTo]) {
+      throw `'${transitionTo}' does not exist`;
+    }
+    this.state = transitionTo;
+  }
+
+  get actions() {
+    const actions = {};
+    Object.keys(this.states)
+      .filter(s => s !== 'value').forEach(a => actions[a] = a);
+    return actions;
+  }
+
+  get value() { return this.states[this.state].value; }
+}

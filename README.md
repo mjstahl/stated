@@ -1,19 +1,17 @@
 # Transiton
 That which transitions between states.
 
-`transiton([<initial: String>,] <states: Object>) -> <transiton: Object>`
+`transiton(<initial: String>, <states: Object>) -> <transiton: Object>`
 
-To create a transiton, (optionally) pass a starting state, and a states
-object. If no initial state is specified, `start` is assumed to be the first
-state.
-
-A states object has a structure as follows:
+To create a transiton pass a starting state, and a states object. A states
+object has a structure as follows:
 
 ```js
-const machine = transiton('water', {
+const Transiton = require('transiton');
+const h20 = new Transiton('water', {
   // will be the starting state is no initial state name is provided
   'water': {
-    // an edge's value can only be a string, and must be a defined state name
+    // an action's value can only be a string, and must be a defined state name
     'FROZEN': 'ice',
     'BOILED': 'steam',
     // any value, string, array, object, etc.
@@ -31,8 +29,8 @@ const machine = transiton('water', {
   }
 });
 
-machine.state; //-> 'water'
-machine.value; //-> '60F'
+h20.state; //-> 'water'
+h20.value; //-> '60F'
 ```
 
 `transiton.actions -> <actions: Object>`
@@ -42,7 +40,7 @@ avoid typos when traversing states. For example:
 
 ```js
 // starting with the example above
-machine.actions;
+h20.actions;
 
 //-> { 'FROZEN': 'FROZEN', 'BOILED': 'BOILED' }
 ```
@@ -58,10 +56,10 @@ attempting to call `has` with an invalid action will cause a runtime error
 as that action will not exist on `<transiton>.actions`.
 
 ```js
-  machine.has(machine.actions.FROZEN);
+  h20.has(machine.actions.FROZEN);
 
-  machine.state; //-> 'ice'
-  machine.value; //-> '32F'
+  h20.state; //-> 'ice'
+  h20.value; //-> '32F'
 ```
 
 `transiton.state -> <state: String>`
@@ -69,7 +67,7 @@ as that action will not exist on `<transiton>.actions`.
 Return the name of the transiton's current state.
 
 ```js
-  machine.state;
+  h20.state;
 
   //-> 'ice'
 ```
@@ -80,8 +78,8 @@ Returns the value of the current state if one exists; returns `undefined`
 if not.
 
 ```js
-  machine.has(machine.actions.BOILED);
-  machine.value;
+  h20.has(machine.actions.BOILED);
+  h20.value;
 
   //-> '212F'
 ```
