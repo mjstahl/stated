@@ -18,11 +18,11 @@ const h20 = new Transiton({
   },
   ice: {
     BOILED: 'steam',
-    WARMED: 'water',
+    WARMED: 'initial',
     value: '32F'
   },
   steam: {
-    COOLED: 'water',
+    COOLED: 'initial',
     FROZEN: 'ice',
     // if 'value' is a function it will be called
     value() { return '212F' }
