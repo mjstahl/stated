@@ -24,8 +24,9 @@ const h20 = new Transiton({
   steam: {
     COOLED: 'initial',
     FROZEN: 'ice',
-    // if 'value' is a function it will be called
-    value() { return '212F' }
+    value: {
+      temp: '212F'
+    }
   }
 });
 
@@ -33,11 +34,12 @@ h20.state; //-> 'initial'
 h20.value; //-> '60F'
 ```
 
-`transiton.has(<action: String>) -> <Transiton>`
+`transiton.has(<action: String>[, <updateValue: Any>]) -> <Transiton>`
 
-Transition from the current state to a new state. `<transiton>.state` now returns
-the name of the new state. `<transiton>.value` will return the value of the new
-state if one exists, will return `undefined` if not.
+Transition from the current state to a new state. If called with a second
+argument. The value of the new state will be updated with the value. If value
+is an Object, the current value and `updateValue` will be merged. If the
+`updateValue` is not an Object, value will be replaced with `updateValue`.
 
 `actions` only has values for actions related to the current state. So
 attempting to call `has` with an invalid action will cause a runtime error
@@ -48,6 +50,10 @@ as that action will not exist on `<transiton>.actions`.
 
   h20.state; //-> 'ice'
   h20.value; //-> '32F'
+
+  h20.has(h20.actions.BOILED, { state: 'gas' });
+
+  h20.value; //-> { state: 'gas', temp: '212F' }
 ```
 
 `transiton.actions -> <actions: Object>`
@@ -59,7 +65,7 @@ avoid typos when traversing states. For example:
 // starting with the example above
 h20.actions;
 
-//-> { 'FROZEN': 'FROZEN', 'BOILED': 'BOILED' }
+//-> { 'FROZEN': 'FROZEN', 'COOLED': 'COOLED' }
 ```
 
 `transiton.state -> <state: String>`
@@ -69,18 +75,17 @@ Return the name of the transiton's current state.
 ```js
   h20.state;
 
-  //-> 'ice'
+  //-> 'steam'
 ```
 
 `transiton.value -> <value: Any>`
 
 Returns the value of the current state if one exists; returns `undefined`
-if not. If the type of 'value' is `'function'`, it will be evaluated and the
-result will be returned.
+if not.
 
 ```js
-  h20.has(h20.actions.BOILED);
+  h20.has(h20.actions.WARMED);
   h20.value;
 
-  //-> '212F'
+  //-> '60F'
 ```
