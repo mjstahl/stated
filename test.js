@@ -9,11 +9,11 @@ const states = {
   },
   ice: {
     BOILED: 'steam',
-    WARMED: 'water',
+    WARMED: 'initial',
     value: '32F'
   },
   steam: {
-    COOLED: 'water',
+    COOLED: 'initial',
     FROZEN: 'ice',
     value() { return '212F' }
   }
