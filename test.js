@@ -15,14 +15,15 @@ const states = {
   steam: {
     COOLED: 'initial',
     FROZEN: 'ice',
-    value() { return '212F' }
+    value: {
+      temp: '212F'
+    }
   }
 };
 
 test('newly created instance', t => {
   t.plan(4);
   const state = new Transiton(states);
-
   t.truthy(state, 'Transiton created successfully');
   t.is(state.state, 'initial',
     'initial state is correct');
@@ -36,7 +37,6 @@ test('transition to new state', t => {
   t.plan(3);
   const state = new Transiton(states);
   state.has(state.actions.FROZEN);
-
   t.is(state.state, 'ice',
     'transitioned to new state successfully');
   t.is(state.value, '32F',
@@ -45,11 +45,18 @@ test('transition to new state', t => {
     'updated actions are correct');
 });
 
-test('evaluating a value function', t => {
+test('has allows an update to state w/ primitive', t => {
   t.plan(1);
   const state = new Transiton(states);
-  state.has(state.actions.BOILED);
+  state.has(state.actions.FROZEN, '75F');
+  t.is(state.value, '75F',
+    'value is correctly set to states value');
+});
 
-  t.is(state.value, '212F',
+test('has allows an update to state w/ object', t => {
+  t.plan(1);
+  const state = new Transiton(states);
+  state.has(state.actions.BOILED, { state: 'gas' });
+  t.deepEqual(state.value, { temp: '212F', state: 'gas' },
     'value is correctly set to states value');
 });

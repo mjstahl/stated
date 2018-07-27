@@ -7,7 +7,7 @@ class Transiton {
     this.state = 'initial';
   }
 
-  has(action) {
+  has(action, updateValue) {
     const transitionTo = this.states[this.state][action];
     if (!transitionTo) {
       throw `'${action}' does not exist as an action of '${this.state}'`;
@@ -19,6 +19,8 @@ class Transiton {
       throw `'${transitionTo}' does not exist`;
     }
     this.state = transitionTo;
+    if (updateValue) this.value = updateValue;
+    return this;
   }
 
   get actions() {
@@ -29,8 +31,16 @@ class Transiton {
   }
 
   get value() {
+    return this.states[this.state].value;
+  }
+
+  set value(update) {
     const value = this.states[this.state].value;
-    return (typeof value === 'function') ? value() : value;
+    if (update && (Object.getPrototypeOf(update) === Object.prototype)) {
+      Object.assign(value, update);
+    } else {
+      this.states[this.state].value = update;
+    }
   }
 }
 
