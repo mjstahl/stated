@@ -1,5 +1,5 @@
 {
-  "name": "transiton",
+  "name": "@mjstahl/stated",
   "version": "2.1.1",
   "description": "That which transitions between states",
   "main": "index.js",
