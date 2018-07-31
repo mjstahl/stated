@@ -1,5 +1,5 @@
 const test = require('ava');
-const transiton = require('./index');
+const stated = require('./index');
 
 const states = {
   initial: {
@@ -23,8 +23,8 @@ const states = {
 
 test('newly created instance', t => {
   t.plan(4);
-  const state = transiton(states);
-  t.truthy(state, 'Transiton created successfully');
+  const state = stated(states);
+  t.truthy(state, 'Stated created successfully');
   t.is(state.state, 'initial',
     'initial state is correct');
   t.is(state.value, '60F',
@@ -35,7 +35,7 @@ test('newly created instance', t => {
 
 test('transition to new state', t => {
   t.plan(3);
-  const state = transiton(states);
+  const state = stated(states);
   state.has(state.actions.FROZEN);
   t.is(state.state, 'ice',
     'transitioned to new state successfully');
@@ -47,7 +47,7 @@ test('transition to new state', t => {
 
 test('has allows an update to state w/ primitive', t => {
   t.plan(1);
-  const state = transiton(states);
+  const state = stated(states);
   state.has(state.actions.FROZEN, '75F');
   t.is(state.value, '75F',
     'value is correctly set to states value');
@@ -55,7 +55,7 @@ test('has allows an update to state w/ primitive', t => {
 
 test('has allows an update to state w/ object', t => {
   t.plan(1);
-  const state = transiton(states);
+  const state = stated(states);
   state.has(state.actions.BOILED, { state: 'gas' });
   t.deepEqual(state.value, { temp: '212F', state: 'gas' },
     'value is correctly set to states value');
@@ -63,7 +63,7 @@ test('has allows an update to state w/ object', t => {
 
 test('return to initial state', t => {
   t.plan(1);
-  const state = transiton(states);
+  const state = stated(states);
   state.has(state.actions.FROZEN);
   state.initial();
   t.is(state.value, '60F', 'value is correctly set to initial value');

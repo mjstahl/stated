@@ -1,6 +1,6 @@
 'use strict'
 
-class Transiton {
+class Stated {
   constructor(states) {
     if (!states['initial']) throw `A valid 'initial' state must be provided`;
     this.states = states;
@@ -45,7 +45,8 @@ class Transiton {
 
   initial() {
     this.state = 'initial';
+    return this;
   }
 }
 
-module.exports = function (states) { return new Transiton(states); };
+module.exports = function (states) { return new Stated(states); };
