@@ -1,6 +1,6 @@
 {
   "name": "transiton",
-  "version": "1.1.1",
+  "version": "2.1.1",
   "description": "That which transitions between states",
   "main": "index.js",
   "scripts": {

@@ -7,22 +7,6 @@ class Transiton {
     this.state = 'initial';
   }
 
-  has(action, updateValue) {
-    const transitionTo = this.states[this.state][action];
-    if (!transitionTo) {
-      throw `'${action}' does not exist as an action of '${this.state}'`;
-    }
-    if (typeof transitionTo !== 'string') {
-      throw `'${transitionTo}' is not a valid state. It must be a string.`
-    }
-    if (!this.states[transitionTo]) {
-      throw `'${transitionTo}' does not exist`;
-    }
-    this.state = transitionTo;
-    if (updateValue) this.value = updateValue;
-    return this;
-  }
-
   get actions() {
     const actions = {};
     Object.keys(this.states[this.state])
@@ -42,6 +26,26 @@ class Transiton {
       this.states[this.state].value = update;
     }
   }
+
+  has(action, updateValue) {
+    const transitionTo = this.states[this.state][action];
+    if (!transitionTo) {
+      throw `'${action}' does not exist as an action of '${this.state}'`;
+    }
+    if (typeof transitionTo !== 'string') {
+      throw `'${transitionTo}' is not a valid state. It must be a string.`
+    }
+    if (!this.states[transitionTo]) {
+      throw `'${transitionTo}' does not exist`;
+    }
+    this.state = transitionTo;
+    if (updateValue) this.value = updateValue;
+    return this;
+  }
+
+  initial() {
+    this.state = 'initial';
+  }
 }
 
-module.exports = Transiton;
+module.exports = function (states) { return new Transiton(states); };
