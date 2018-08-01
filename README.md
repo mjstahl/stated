@@ -1,13 +1,24 @@
 # Stated
 That which transitions between states.
 
+## Installation
+
+```js
+$ npm install --save @mjstahl/stated
+```
+
+```js
+const stated = require('@mjstahl/stated');
+```
+
+## API
+
 `stated(<states: Object>) -> <Stated>`
 
 To create an instance of Stated pass a 'states' object. A valid states object
 must, at a minimum, have an 'initial' state object.
 
 ```js
-const stated = require('@mjstahl/stated');
 const h20 = stated({
   initial: {
     // actions must reference existing states
