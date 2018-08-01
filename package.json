@@ -1,6 +1,6 @@
 {
   "name": "@mjstahl/stated",
-  "version": "2.2.1",
+  "version": "2.2.2",
   "description": "That which transitions between states",
   "main": "index.js",
   "scripts": {
