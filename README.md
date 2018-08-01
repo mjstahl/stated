@@ -1,5 +1,5 @@
 # Stated
-That which transitions between states.
+Simply put state management for your JavaScript application.
 
 ## Installation
 
