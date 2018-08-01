@@ -1,7 +1,7 @@
 {
   "name": "@mjstahl/stated",
   "version": "2.2.2",
-  "description": "That which transitions between states",
+  "description": "Simply put state management for your JavaScript application",
   "main": "index.js",
   "scripts": {
     "test": "ava"
@@ -11,10 +11,10 @@
     "url": "git+https://github.com/mjstahl/stated.git"
   },
   "keywords": [
+    "javascript",
     "state",
-    "machine",
-    "finite",
-    "automata"
+    "state machine",
+    "state management"
   ],
   "license": "MIT",
   "bugs": {
