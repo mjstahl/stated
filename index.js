@@ -43,6 +43,10 @@ class Stated {
     return this;
   }
 
+  to() {
+    return this.has.apply(this, arguments)
+  }
+
   initial() {
     this.state = 'initial';
     return this;

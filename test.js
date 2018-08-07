@@ -68,3 +68,29 @@ test('return to initial state', t => {
   state.initial();
   t.is(state.value, '60F', 'value is correctly set to initial value');
 });
+
+test('transition to new state using to', t => {
+  t.plan(2);
+  const state = stated(states);
+  state.to(state.actions.FROZEN);
+  t.is(state.state, 'ice',
+    'transitioned to new state successfully');
+  t.deepEqual(state.actions, { BOILED: 'BOILED', WARMED: 'WARMED' },
+    'updated actions are correct');
+});
+
+test('ton allows an update to state w/ primitive', t => {
+  t.plan(1);
+  const state = stated(states);
+  state.to(state.actions.FROZEN, '32F');
+  t.is(state.value, '32F',
+    'value is correctly set to states value');
+});
+
+test('to allows an update to state w/ object', t => {
+  t.plan(1);
+  const state = stated(states);
+  state.to(state.actions.BOILED, { state: 'gas' });
+  t.deepEqual(state.value, { temp: '212F', state: 'gas' },
+    'value is correctly set to states value');
+});
