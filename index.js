@@ -10,7 +10,8 @@ class Stated {
   get actions() {
     const actions = {};
     Object.keys(this.states[this.state])
-      .filter(s => s !== 'value').forEach(a => actions[a] = a);
+      .filter(s => s !== 'value')
+      .forEach(a => actions[a] = a);
     return actions;
   }
 
@@ -43,14 +44,14 @@ class Stated {
     return this;
   }
 
-  to() {
-    return this.has.apply(this, arguments)
-  }
-
   initial() {
     this.state = 'initial';
     return this;
   }
+
+  to() {
+    return this.has.apply(this, arguments)
+  }
 }
 
-module.exports = function (states) { return new Stated(states); };
+module.exports = (states) => new Stated(states);
