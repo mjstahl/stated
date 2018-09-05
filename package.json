@@ -4,7 +4,7 @@
   "description": "Simply put state management for your JavaScript application",
   "main": "index.js",
   "scripts": {
-    "test": "ava"
+    "test": "standard && ava"
   },
   "repository": {
     "type": "git",
@@ -22,6 +22,7 @@
   },
   "homepage": "https://github.com/mjstahl/stated#readme",
   "devDependencies": {
-    "ava": "1.0.0-beta.6"
+    "ava": "1.0.0-beta.6",
+    "standard": "^12.0.1"
   }
 }
