@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.com/mjstahl/stated.svg?branch=master)](https://travis-ci.com/mjstahl/stated)
+
 # Stated
 Simply put state management for your JavaScript application.
 
