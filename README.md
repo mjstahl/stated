@@ -84,6 +84,21 @@ as that action will not exist on `<stated>.actions`.
   h20.value; //-> '0C'
 ```
 
+`stated.is(<action: String[, <updateValue: Any>]>) -> <Stated>`
+
+'is' is an alias for 'has'
+
+```js
+  h20.is(h20.actions.BOILED);
+
+  h20.state; //-> 'steam'
+  h20.value; //-> { state: 'ice', temp: '212F' }
+
+  h20.is(h20.actions.FROZEN, '0C');
+
+  h20.value; //-> '0C'
+```
+
 `stated.initial() -> <Stated>`
 
 Set the Stated object's state to 'initial'.

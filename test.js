@@ -79,7 +79,7 @@ test('transition to new state using to', t => {
     'updated actions are correct')
 })
 
-test('ton allows an update to state w/ primitive', t => {
+test('to allows an update to state w/ primitive', t => {
   t.plan(1)
   const state = stated(states)
   state.to(state.actions.FROZEN, '32F')
@@ -91,6 +91,32 @@ test('to allows an update to state w/ object', t => {
   t.plan(1)
   const state = stated(states)
   state.to(state.actions.BOILED, { state: 'gas' })
+  t.deepEqual(state.value, { temp: '212F', state: 'gas' },
+    'value is correctly set to states value')
+})
+
+test('transition to new state using is', t => {
+  t.plan(2)
+  const state = stated(states)
+  state.is(state.actions.FROZEN)
+  t.is(state.state, 'ice',
+    'transitioned to new state successfully')
+  t.deepEqual(state.actions, { BOILED: 'BOILED', WARMED: 'WARMED' },
+    'updated actions are correct')
+})
+
+test('is allows an update to state w/ primitive', t => {
+  t.plan(1)
+  const state = stated(states)
+  state.is(state.actions.FROZEN, '32F')
+  t.is(state.value, '32F',
+    'value is correctly set to states value')
+})
+
+test('is allows an update to state w/ object', t => {
+  t.plan(1)
+  const state = stated(states)
+  state.is(state.actions.BOILED, { state: 'gas' })
   t.deepEqual(state.value, { temp: '212F', state: 'gas' },
     'value is correctly set to states value')
 })

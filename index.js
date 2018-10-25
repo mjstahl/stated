@@ -52,6 +52,10 @@ class Stated {
   to () {
     return this.has.apply(this, arguments)
   }
+
+  is () {
+    return this.has.apply(this, arguments)
+  }
 }
 
 module.exports = (states) => new Stated(states)
