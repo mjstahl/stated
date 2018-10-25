@@ -10,12 +10,17 @@ $ npm install --save @mjstahl/stated
 ```
 
 ```js
+// as a factory function
 const stated = require('@mjstahl/stated');
+
+// as a class expression
+const { Stated } = require('@mjstahl/stated');
 ```
 
 ## API
 
 `stated(<states: Object>) -> <Stated>`
+`new Stated(<states: Object>) -> <Stated>`
 
 To create an instance of Stated pass a 'states' object. A valid states object
 must, at a minimum, have an 'initial' state object.

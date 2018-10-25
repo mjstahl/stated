@@ -58,4 +58,5 @@ class Stated {
   }
 }
 
-module.exports = (states) => new Stated(states)
+exports = module.exports = (states) => new Stated(states)
+exports.Stated = Stated

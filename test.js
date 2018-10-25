@@ -120,3 +120,12 @@ test('is allows an update to state w/ object', t => {
   t.deepEqual(state.value, { temp: '212F', state: 'gas' },
     'value is correctly set to states value')
 })
+
+test('export as object', t => {
+  t.plan(1)
+  const { Stated } = require('./index')
+  const state = new Stated(states)
+  state.is(state.actions.FROZEN, '75F')
+  t.is(state.value, '75F',
+    'value is correctly set to states value')
+})

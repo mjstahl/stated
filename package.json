@@ -4,7 +4,7 @@
   "description": "Simply put state management for your JavaScript application",
   "main": "index.js",
   "scripts": {
-    "test": "standard && ava"
+    "test": "standard --fix && ava"
   },
   "repository": {
     "type": "git",
