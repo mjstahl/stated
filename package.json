@@ -24,5 +24,8 @@
   "devDependencies": {
     "ava": "1.0.0-beta.6",
     "standard": "^12.0.1"
+  },
+  "dependencies": {
+    "events": "^3.0.0"
   }
 }

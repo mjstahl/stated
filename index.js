@@ -1,8 +1,13 @@
 'use strict'
 
-class Stated {
+const events = require('events')
+
+class Stated extends events.EventEmitter {
   constructor (states) {
-    if (!states['initial']) { throw new Error(`A valid 'initial' state must be provided`) }
+    super()
+    if (!states['initial']) {
+      throw new Error(`A valid 'initial' state must be provided`)
+    }
     this.states = states
     this.state = 'initial'
   }
@@ -28,6 +33,13 @@ class Stated {
     }
   }
 
+  change (state, updateValue) {
+    this.state = state
+    if (updateValue) this.value = updateValue
+
+    this.emit('transition', this)
+  }
+
   has (action, updateValue) {
     const transitionTo = this.states[this.state][action]
     if (!transitionTo) {
@@ -39,21 +51,20 @@ class Stated {
     if (!this.states[transitionTo]) {
       throw new Error(`'${transitionTo}' does not exist`)
     }
-    this.state = transitionTo
-    if (updateValue) this.value = updateValue
+    this.change(transitionTo, updateValue)
     return this
   }
 
   initial () {
-    this.state = 'initial'
+    this.change('initial')
     return this
   }
 
-  to () {
+  is () {
     return this.has.apply(this, arguments)
   }
 
-  is () {
+  to () {
     return this.has.apply(this, arguments)
   }
 }

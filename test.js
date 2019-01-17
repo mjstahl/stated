@@ -129,3 +129,17 @@ test('export as object', t => {
   t.is(state.value, '75F',
     'value is correctly set to states value')
 })
+
+test('emits "transition" event when state is changed', t => {
+  t.plan(3)
+  const state = stated(states)
+  state.on('transition', ({ state, actions, value }) => {
+    t.truthy(actions.BOILED,
+      '"actions" property is available on the argument')
+    t.is(state, 'ice',
+      'correct state is applied and passed')
+    t.is(value, '75F',
+      '"transition" event passes the stated object as the cb argument')
+  })
+  state.is(state.actions.FROZEN, '75F')
+})
