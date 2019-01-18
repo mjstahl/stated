@@ -11,7 +11,11 @@
     "url": "git+https://github.com/mjstahl/stated.git"
   },
   "keywords": [
+    "finite state machine",
+    "fsa",
     "javascript",
+    "pda",
+    "pushdown automata",
     "state",
     "state machine",
     "state management"

@@ -37,6 +37,45 @@ class Stated extends events.EventEmitter {
     }
   }
 
+  initial () {
+    this.__transition('initial')
+    return this
+  }
+
+  redo () {
+    if (!this.persistant) {
+      return this
+    }
+    if (this.__current === this.__history.length - 1) {
+      return this
+    }
+    this.__current = this.__current + 1
+    this.__changeHistory()
+  }
+
+  to (action, updateValue) {
+    const transitionTo = this.__states[this.state][action]
+    if (!transitionTo) {
+      throw new Error(`'${action}' does not exist as an action of '${this.state}'`)
+    }
+    if (typeof transitionTo !== 'string') {
+      throw new Error(`'${transitionTo}' is not a valid state. It must be a string.`)
+    }
+    if (!this.__states[transitionTo]) {
+      throw new Error(`'${transitionTo}' does not exist`)
+    }
+    this.__transition(transitionTo, updateValue)
+    return this
+  }
+
+  undo () {
+    if (!this.persistant || this.__current === 0) {
+      return this
+    }
+    this.__current = this.__current - 1
+    this.__changeHistory()
+  }
+
   __recordHistory () {
     this.__history.push({ state: this.state, value: this.value })
     this.__current = this.__history.length - 1
@@ -56,53 +95,6 @@ class Stated extends events.EventEmitter {
       this.__recordHistory()
     }
     this.emit('transition', this)
-  }
-
-  has (action, updateValue) {
-    const transitionTo = this.__states[this.state][action]
-    if (!transitionTo) {
-      throw new Error(`'${action}' does not exist as an action of '${this.state}'`)
-    }
-    if (typeof transitionTo !== 'string') {
-      throw new Error(`'${transitionTo}' is not a valid state. It must be a string.`)
-    }
-    if (!this.__states[transitionTo]) {
-      throw new Error(`'${transitionTo}' does not exist`)
-    }
-    this.__transition(transitionTo, updateValue)
-    return this
-  }
-
-  initial () {
-    this.__transition('initial')
-    return this
-  }
-
-  redo () {
-    if (!this.persistant) {
-      return this
-    }
-    if (this.__current === this.__history.length - 1) {
-      return this
-    }
-    this.__current = this.__current + 1
-    this.__changeHistory()
-  }
-
-  is () {
-    return this.has.apply(this, arguments)
-  }
-
-  to () {
-    return this.has.apply(this, arguments)
-  }
-
-  undo () {
-    if (!this.persistant || this.__current === 0) {
-      return this
-    }
-    this.__current = this.__current - 1
-    this.__changeHistory()
   }
 }
 

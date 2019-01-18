@@ -20,6 +20,7 @@ const { Stated } = require('@mjstahl/stated');
 ## API
 
 `stated(states: Object[, persistant: Boolean]) -> Stated`
+
 `new Stated(states: Object[, persistant: Boolean]) -> Stated`
 
 To create an instance of Stated pass a 'states' object. A valid states object
@@ -56,7 +57,7 @@ h20.state; //-> 'initial'
 h20.value; //-> '60F'
 ```
 
-`stated.has(action: String[, updateValue: Any]) -> Stated`
+`<stated>.to(action: String[, updateValue: Any]) -> Stated`
 
 Transition from the current state to a new state. If called with a second
 argument. The value of the new state will be updated with the value. If value
@@ -68,47 +69,17 @@ attempting to call `has` with an invalid action will cause a runtime error
 as that action will not exist on `<stated>.actions`.
 
 ```js
-  h20.has(h20.actions.FROZEN);
+  h20.to(h20.actions.FROZEN);
 
   h20.state; //-> 'ice'
   h20.value; //-> '32F'
 
-  h20.has(h20.actions.BOILED, { state: 'gas' });
+  h20.to(h20.actions.BOILED, { state: 'gas' });
 
   h20.value; //-> { state: 'gas', temp: '212F' }
 ```
 
-`stated.to(action: String[, updateValue: Any]) -> Stated`
-
-'to' is an alias for 'has'.
-
-```js
-  h20.to(h20.actions.BOILED);
-
-  h20.state; //-> 'steam'
-  h20.value; //-> { state: 'ice', temp: '212F' }
-
-  h20.to(h20.actions.FROZEN, '0C');
-
-  h20.value; //-> '0C'
-```
-
-`stated.is(action: String[, updateValue: Any]) -> Stated`
-
-'is' is an alias for 'has'
-
-```js
-  h20.is(h20.actions.BOILED);
-
-  h20.state; //-> 'steam'
-  h20.value; //-> { state: 'ice', temp: '212F' }
-
-  h20.is(h20.actions.FROZEN, '0C');
-
-  h20.value; //-> '0C'
-```
-
-`stated.initial() -> Stated`
+`<stated>.initial() -> Stated`
 
 Set the Stated object's state to 'initial'.
 
@@ -119,7 +90,7 @@ Set the Stated object's state to 'initial'.
   h20.value; //-> '60F'
 ```
 
-`stated.actions -> Object`
+`<stated>.actions -> Object`
 
 Return an object with actions as properties and associated values. Provided to
 avoid typos when traversing states. For example:
@@ -131,7 +102,7 @@ h20.actions;
 //-> { 'FROZEN': 'FROZEN', 'COOLED': 'COOLED' }
 ```
 
-`stated.state -> String`
+`<stated>.state -> String`
 
 Return the name of the Stated's current state.
 
@@ -141,7 +112,7 @@ Return the name of the Stated's current state.
   //-> 'steam'
 ```
 
-`stated.value -> Any`
+`<stated>.value -> Any`
 
 Returns the value of the current state if one exists; returns `undefined`
 if not.
@@ -172,7 +143,7 @@ object passed the only argument to the callback.
 By default each Stated object is persistant and stores each state change,
 allowing the user to `undo` and `redo` states.
 
-`stated.persistant -> Boolean`
+`<stated>.persistant -> Boolean`
 
 Toggle whether the Stated object will store each state change.
 
@@ -183,7 +154,7 @@ h20.persistant //-> true, Stated objects are persistant by default
 h20.persistant = false
 ```
 
-`stated.undo() -> Stated`
+`<stated>.undo() -> Stated`
 
 Return to a previous state. If the current state is `'inital'` and `undo` is
 called, the Stated object will be returned without performing a state
@@ -197,7 +168,7 @@ transition (in the `'initial'` state).
   h20.state; //-> 'initial'
 ```
 
-`stated.redo() -> Stated`
+`<stated>.redo() -> Stated`
 
 Re-apply a later state. If the current state is the top of the stack of states
 and `redo` is called, the Stated object will be returned without performing a

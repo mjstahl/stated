@@ -36,7 +36,7 @@ test('newly created instance', t => {
 test('transition to new state', t => {
   t.plan(3)
   const state = stated(states)
-  state.has(state.actions.FROZEN)
+  state.to(state.actions.FROZEN)
   t.is(state.state, 'ice',
     'transitioned to new state successfully')
   t.is(state.value, '32F',
@@ -48,7 +48,7 @@ test('transition to new state', t => {
 test('has allows an update to state w/ primitive', t => {
   t.plan(1)
   const state = stated(states)
-  state.has(state.actions.FROZEN, '75F')
+  state.to(state.actions.FROZEN, '75F')
   t.is(state.value, '75F',
     'value is correctly set to states value')
 })
@@ -56,7 +56,7 @@ test('has allows an update to state w/ primitive', t => {
 test('has allows an update to state w/ object', t => {
   t.plan(1)
   const state = stated(states)
-  state.has(state.actions.BOILED, { state: 'gas' })
+  state.to(state.actions.BOILED, { state: 'gas' })
   t.deepEqual(state.value, { temp: '212F', state: 'gas' },
     'value is correctly set to states value')
 })
@@ -64,7 +64,7 @@ test('has allows an update to state w/ object', t => {
 test('return to initial state', t => {
   t.plan(1)
   const state = stated(states)
-  state.has(state.actions.FROZEN)
+  state.to(state.actions.FROZEN)
   state.initial()
   t.is(state.value, '60F', 'value is correctly set to initial value')
 })
@@ -98,7 +98,7 @@ test('to allows an update to state w/ object', t => {
 test('transition to new state using is', t => {
   t.plan(2)
   const state = stated(states)
-  state.is(state.actions.FROZEN)
+  state.to(state.actions.FROZEN)
   t.is(state.state, 'ice',
     'transitioned to new state successfully')
   t.deepEqual(state.actions, { BOILED: 'BOILED', WARMED: 'WARMED' },
@@ -108,7 +108,7 @@ test('transition to new state using is', t => {
 test('is allows an update to state w/ primitive', t => {
   t.plan(1)
   const state = stated(states)
-  state.is(state.actions.FROZEN, '32F')
+  state.to(state.actions.FROZEN, '32F')
   t.is(state.value, '32F',
     'value is correctly set to states value')
 })
@@ -116,7 +116,7 @@ test('is allows an update to state w/ primitive', t => {
 test('is allows an update to state w/ object', t => {
   t.plan(1)
   const state = stated(states)
-  state.is(state.actions.BOILED, { state: 'gas' })
+  state.to(state.actions.BOILED, { state: 'gas' })
   t.deepEqual(state.value, { temp: '212F', state: 'gas' },
     'value is correctly set to states value')
 })
@@ -125,7 +125,7 @@ test('export as object', t => {
   t.plan(1)
   const { Stated } = require('./index')
   const state = new Stated(states)
-  state.is(state.actions.FROZEN, '75F')
+  state.to(state.actions.FROZEN, '75F')
   t.is(state.value, '75F',
     'value is correctly set to states value')
 })
@@ -141,7 +141,7 @@ test('emits "transition" event when state is changed', t => {
     t.is(value, '75F',
       '"transition" event passes the stated object as the cb argument')
   })
-  state.is(state.actions.FROZEN, '75F')
+  state.to(state.actions.FROZEN, '75F')
 })
 
 test('persists history by default, starting with "initial"', t => {
