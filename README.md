@@ -11,10 +11,10 @@ $ npm install --save @mjstahl/stated
 
 ```js
 // as a factory function
-const stated = require('@mjstahl/stated');
+const stated = require('@mjstahl/stated')
 
 // as a class expression
-const { Stated } = require('@mjstahl/stated');
+const { Stated } = require('@mjstahl/stated')
 ```
 
 ## API
@@ -51,10 +51,10 @@ const h20 = stated({
       temp: '212F'
     }
   }
-});
+})
 
-h20.state; //-> 'initial'
-h20.value; //-> '60F'
+h20.state //-> 'initial'
+h20.value //-> '60F'
 ```
 
 `<stated>.to(action: String[, updateValue: Any]) -> Stated`
@@ -65,14 +65,14 @@ is an Object, the current value and `updateValue` will be merged. If the
 `updateValue` is not an Object, value will be replaced with `updateValue`.
 
 ```js
-  h20.to(h20.actions.FROZEN);
+  h20.to(h20.actions.FROZEN)
 
-  h20.state; //-> 'ice'
-  h20.value; //-> '32F'
+  h20.state //-> 'ice'
+  h20.value //-> '32F'
 
-  h20.to(h20.actions.BOILED, { state: 'gas' });
+  h20.to(h20.actions.BOILED, { state: 'gas' })
 
-  h20.value; //-> { state: 'gas', temp: '212F' }
+  h20.value //-> { state: 'gas', temp: '212F' }
 ```
 
 `<stated>.initial() -> Stated`
@@ -80,10 +80,10 @@ is an Object, the current value and `updateValue` will be merged. If the
 Set the Stated object's state to 'initial'.
 
 ```js
-  h20.initial();
+  h20.initial()
 
-  h20.state; //-> 'initial'
-  h20.value; //-> '60F'
+  h20.state //-> 'initial'
+  h20.value //-> '60F'
 ```
 
 `<stated>.actions -> Object`
@@ -92,8 +92,8 @@ Return an object with actions as properties and associated values. Provided to
 avoid typos when traversing states. For example:
 
 ```js
-h20.has(h20.actions.BOILED);
-h20.actions;
+h20.to(h20.actions.BOILED)
+h20.actions
 
 //-> { 'FROZEN': 'FROZEN', 'COOLED': 'COOLED' }
 ```
@@ -107,7 +107,7 @@ as that action does not exist on `<stated>.actions`.
 Return the name of the Stated's current state.
 
 ```js
-  h20.state;
+  h20.state
 
   //-> 'steam'
 ```
@@ -118,10 +118,64 @@ Returns the value of the current state if one exists; returns `undefined`
 if not.
 
 ```js
-  h20.has(h20.actions.WARMED);
-  h20.value;
+  h20.to(h20.actions.WARMED)
+  h20.value
 
   //-> '60F'
+```
+
+## Transition Functions
+
+Each state can have an `onLeave` and `onEnter` function that is executed when
+leaving one state, and having entered another. This are useful for performing
+side-effects.
+
+`.onLeave() -> Void`
+
+Executed when a transition is to occur but before the current state has been
+replaced with the next state.
+
+```js
+const h20 = stated({
+  initial: {
+    FROZEN: 'ice',
+    value: '60F'
+    onLeave: () => console.log('Winter is Coming!!!')
+  },
+  ice: {
+    WARMED: 'initial',
+    value: '32F'
+  },
+})
+
+h20.to(h20.actions.FROZEN)
+
+//-> 'Winter is Coming!!!'
+```
+
+`.onEnter() -> Void`
+
+Executed after the state and values have been updated, history has recorded (if
+persistant), and `'transition'` event has been emitted.
+
+```js
+const h20 = stated({
+  initial: {
+    FROZEN: 'ice',
+    value: '60F'
+    onLeave: () => console.log('Winter is Coming!!!')
+  },
+  ice: {
+    WARMED: 'initial',
+    value: '32F'
+    onEnter: () => console.log('Winter is Here!!!')
+  },
+})
+
+h20.to(h20.actions.FROZEN)
+
+//-> 'Winter is Coming!!!'
+//-> 'Winter is Here!!!'
 ```
 
 ## Events
@@ -135,7 +189,7 @@ object passed the only argument to the callback.
     console.log(state) //-> initial
     console.log(value) //-> '60F'
   })
-  h20.initial();
+  h20.initial()
 ```
 
 ## Persistance
@@ -161,11 +215,11 @@ called, the Stated object will be returned without performing a state
 transition (in the `'initial'` state).
 
 ```js
-  h20.has(h20.actions.FROZEN);
-  h20.state; //-> 'ice'
+  h20.to(h20.actions.FROZEN)
+  h20.state //-> 'ice'
 
   h20.undo()
-  h20.state; //-> 'initial'
+  h20.state //-> 'initial'
 ```
 
 `<stated>.redo() -> Stated`
@@ -176,12 +230,12 @@ state transition (the current state will remain equal to the state at the
 top of the stack).
 
 ```js
-  h20.has(h20.actions.FROZEN);
-  h20.state; //-> 'ice'
+  h20.to(h20.actions.FROZEN)
+  h20.state //-> 'ice'
 
   h20.undo()
-  h20.state; //-> 'initial'
+  h20.state //-> 'initial'
 
   h20.redo()
-  h20.state; //-> 'ice'
+  h20.state //-> 'ice'
 ```

@@ -18,8 +18,9 @@ class Stated extends events.EventEmitter {
 
   get actions () {
     const actions = {}
+    const notActions = ['onEnter', 'onLeave', 'value']
     Object.keys(this.__states[this.state])
-      .filter(s => s !== 'value')
+      .filter(s => !notActions.includes(s))
       .forEach(a => { actions[a] = a })
     return actions
   }
@@ -87,14 +88,18 @@ class Stated extends events.EventEmitter {
   }
 
   __transition (state, updateValue, record = true) {
+    if (this.__history.length !== 0) {
+      const onLeave = this.__states[this.state].onLeave
+      if (onLeave) onLeave()
+    }
+
     this.state = state
-    if (updateValue) {
-      this.value = updateValue
-    }
-    if (this.persistant && record) {
-      this.__recordHistory()
-    }
+    if (updateValue) { this.value = updateValue }
+    if (this.persistant && record) { this.__recordHistory() }
     this.emit('transition', this)
+
+    const onEnter = this.__states[state].onEnter
+    if (onEnter) onEnter()
   }
 }
 

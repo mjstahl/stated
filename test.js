@@ -188,3 +188,42 @@ test('"redo" applies previously recorded states', t => {
   state.redo()
   t.is(state.state, 'steam', '"undo" undoes single state in history')
 })
+
+test('"actions" does not include "value", "onLeave", "onEnter"', t => {
+  t.plan(3)
+  const state = stated(states)
+  const actions = Object.keys(state.actions)
+  t.truthy(!actions.includes('value'), '"actions" does not include "value"')
+  t.truthy(!actions.includes('onEnter'), '"actions" does not include "onEnter"')
+  t.truthy(!actions.includes('onLeave'), '"actions" does not include "onLeave"')
+})
+
+test('"onLeave" function is executed when exiting a state', t => {
+  const state = stated({
+    initial: {
+      FROZEN: 'ice',
+      value: '60F',
+      onLeave: () => t.pass()
+    },
+    ice: {
+      WARMED: 'initial',
+      value: '32F'
+    }
+  })
+  state.to(state.actions.FROZEN)
+})
+
+test('"onEnter" function is executed when a state is entered', t => {
+  const state = stated({
+    initial: {
+      FROZEN: 'ice',
+      value: '60F'
+    },
+    ice: {
+      WARMED: 'initial',
+      value: '32F',
+      onEnter: () => t.pass()
+    }
+  })
+  state.to(state.actions.FROZEN)
+})
