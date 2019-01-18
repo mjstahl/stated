@@ -64,10 +64,6 @@ argument. The value of the new state will be updated with the value. If value
 is an Object, the current value and `updateValue` will be merged. If the
 `updateValue` is not an Object, value will be replaced with `updateValue`.
 
-`actions` only has values for actions related to the current state. So
-attempting to call `has` with an invalid action will cause a runtime error
-as that action will not exist on `<stated>.actions`.
-
 ```js
   h20.to(h20.actions.FROZEN);
 
@@ -101,6 +97,10 @@ h20.actions;
 
 //-> { 'FROZEN': 'FROZEN', 'COOLED': 'COOLED' }
 ```
+
+`actions` only includes actions related to the current state. So
+attempting to call `to` with an invalid action will cause a runtime error
+as that action does not exist on `<stated>.actions`.
 
 `<stated>.state -> String`
 
