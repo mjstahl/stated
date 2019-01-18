@@ -19,11 +19,15 @@ const { Stated } = require('@mjstahl/stated');
 
 ## API
 
-`stated(<states: Object>) -> <Stated>`
-`new Stated(<states: Object>) -> <Stated>`
+`stated(states: Object[, persistant: Boolean]) -> Stated`
+`new Stated(states: Object[, persistant: Boolean]) -> Stated`
 
 To create an instance of Stated pass a 'states' object. A valid states object
 must, at a minimum, have an 'initial' state object.
+
+By default each Stated object is persistant and stores each state change,
+allowing the user to `undo` and `redo` states. Passing `false` as the
+second argument to the constructor will turn this behavior off.
 
 ```js
 const h20 = stated({
@@ -52,7 +56,7 @@ h20.state; //-> 'initial'
 h20.value; //-> '60F'
 ```
 
-`stated.has(<action: String>[, <updateValue: Any>]) -> <Stated>`
+`stated.has(action: String[, updateValue: Any]) -> Stated`
 
 Transition from the current state to a new state. If called with a second
 argument. The value of the new state will be updated with the value. If value
@@ -74,7 +78,7 @@ as that action will not exist on `<stated>.actions`.
   h20.value; //-> { state: 'gas', temp: '212F' }
 ```
 
-`stated.to(<action: String>[, <updateValue: Any>]) -> <Stated>`
+`stated.to(action: String[, updateValue: Any]) -> Stated`
 
 'to' is an alias for 'has'.
 
@@ -89,7 +93,7 @@ as that action will not exist on `<stated>.actions`.
   h20.value; //-> '0C'
 ```
 
-`stated.is(<action: String[, <updateValue: Any>]>) -> <Stated>`
+`stated.is(action: String[, updateValue: Any]) -> Stated`
 
 'is' is an alias for 'has'
 
@@ -104,7 +108,7 @@ as that action will not exist on `<stated>.actions`.
   h20.value; //-> '0C'
 ```
 
-`stated.initial() -> <Stated>`
+`stated.initial() -> Stated`
 
 Set the Stated object's state to 'initial'.
 
@@ -115,7 +119,7 @@ Set the Stated object's state to 'initial'.
   h20.value; //-> '60F'
 ```
 
-`stated.actions -> <actions: Object>`
+`stated.actions -> Object`
 
 Return an object with actions as properties and associated values. Provided to
 avoid typos when traversing states. For example:
@@ -127,7 +131,7 @@ h20.actions;
 //-> { 'FROZEN': 'FROZEN', 'COOLED': 'COOLED' }
 ```
 
-`stated.state -> <state: String>`
+`stated.state -> String`
 
 Return the name of the Stated's current state.
 
@@ -137,7 +141,7 @@ Return the name of the Stated's current state.
   //-> 'steam'
 ```
 
-`stated.value -> <value: Any>`
+`stated.value -> Any`
 
 Returns the value of the current state if one exists; returns `undefined`
 if not.
@@ -161,4 +165,52 @@ object passed the only argument to the callback.
     console.log(value) //-> '60F'
   })
   h20.initial();
+```
+
+## Persistance
+
+By default each Stated object is persistant and stores each state change,
+allowing the user to `undo` and `redo` states.
+
+`stated.persistant -> Boolean`
+
+Toggle whether the Stated object will store each state change.
+
+```js
+h20.persistant //-> true, Stated objects are persistant by default
+
+// To turn off persistance, simply set 'persistant' to 'false'
+h20.persistant = false
+```
+
+`stated.undo() -> Stated`
+
+Return to a previous state. If the current state is `'inital'` and `undo` is
+called, the Stated object will be returned without performing a state
+transition (in the `'initial'` state).
+
+```js
+  h20.has(h20.actions.FROZEN);
+  h20.state; //-> 'ice'
+
+  h20.undo()
+  h20.state; //-> 'initial'
+```
+
+`stated.redo() -> Stated`
+
+Re-apply a later state. If the current state is the top of the stack of states
+and `redo` is called, the Stated object will be returned without performing a
+state transition (the current state will remain equal to the state at the
+top of the stack).
+
+```js
+  h20.has(h20.actions.FROZEN);
+  h20.state; //-> 'ice'
+
+  h20.undo()
+  h20.state; //-> 'initial'
+
+  h20.redo()
+  h20.state; //-> 'ice'
 ```

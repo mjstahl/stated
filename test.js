@@ -143,3 +143,48 @@ test('emits "transition" event when state is changed', t => {
   })
   state.is(state.actions.FROZEN, '75F')
 })
+
+test('persists history by default, starting with "initial"', t => {
+  t.plan(3)
+  const state = stated(states)
+  t.is(state.__history.length, 1, 'history is persisted with "initial" state')
+  const current = state.__current
+  t.is(state.__current, 0, 'state pointer is set to the first state in history')
+  t.is(state.__history[current].state, 'initial', '"initial" state is in history')
+})
+
+test('turning off "persistant" will stop recording history', t => {
+  t.plan(2)
+  const state = stated(states)
+  state.to(state.actions.FROZEN)
+  t.is(state.__history.length, 2, 'persistant by default')
+  state.persistant = false
+  state.to(state.actions.BOILED)
+  t.is(state.__history.length, 2, 'turning off persistant does not add history')
+})
+
+test('"undo" and "redo" are no-ops when history.lenght is 0', t => {
+  t.plan(2)
+  const state = stated(states)
+  state.undo()
+  t.is(state.state, 'initial', '"undo" will not go below 0')
+  state.redo()
+  t.is(state.state, 'initial', '"redo" will not exceed __history.lenght - 1')
+})
+
+test('"undo" rewinds state history', t => {
+  const state = stated(states)
+  state.to(state.actions.FROZEN)
+  state.to(state.actions.BOILED)
+  state.undo()
+  t.is(state.state, 'ice', '"undo" undoes single state in history')
+})
+
+test('"redo" applies previously recorded states', t => {
+  const state = stated(states)
+  state.to(state.actions.FROZEN)
+  state.to(state.actions.BOILED)
+  state.undo()
+  state.redo()
+  t.is(state.state, 'steam', '"undo" undoes single state in history')
+})
