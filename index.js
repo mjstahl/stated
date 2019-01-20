@@ -1,10 +1,11 @@
-'use strict'
-
+const autoBind = require('auto-bind')
 const events = require('events')
 
 class Stated extends events.EventEmitter {
   constructor (states, persistant = true) {
     super()
+    autoBind(this)
+
     if (!states['initial']) {
       throw new Error(`A valid 'initial' state must be provided`)
     }
