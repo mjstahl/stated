@@ -42,11 +42,11 @@ const h20 = stated({
   },
   ice: {
     BOILED: 'steam',
-    WARMED: 'initial',
+    WARMED: 'water',
     value: '32F'
   },
   steam: {
-    COOLED: 'initial',
+    COOLED: 'water',
     FROZEN: 'ice',
     value: {
       temp: '212F'
@@ -54,7 +54,7 @@ const h20 = stated({
   }
 })
 
-h20.state //-> 'initial'
+h20.state //-> 'water'
 h20.value //-> '60F'
 ```
 
