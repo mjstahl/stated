@@ -144,23 +144,23 @@ test('emits "transition" event when state is changed', t => {
   state.to(state.actions.FROZEN, '75F')
 })
 
-test('persists history by default, starting with "initial"', t => {
+test('persists history when second argument is true, starting with "initial"', t => {
   t.plan(3)
-  const state = stated(states)
+  const state = stated(states, true)
   t.is(state.__history.length, 1, 'history is persisted with "initial" state')
   const current = state.__current
   t.is(state.__current, 0, 'state pointer is set to the first state in history')
   t.is(state.__history[current].state, 'initial', '"initial" state is in history')
 })
 
-test('turning off "persistant" will stop recording history', t => {
+test('turning on "persistent" will start recording history', t => {
   t.plan(2)
   const state = stated(states)
   state.to(state.actions.FROZEN)
-  t.is(state.__history.length, 2, 'persistant by default')
-  state.persistant = false
+  t.is(state.__history.length, 0, 'persistent by default')
+  state.persistent = true
   state.to(state.actions.BOILED)
-  t.is(state.__history.length, 2, 'turning off persistant does not add history')
+  t.is(state.__history.length, 1, 'turning off persistent does not add history')
 })
 
 test('"undo" and "redo" are no-ops when history.lenght is 0', t => {
@@ -173,7 +173,7 @@ test('"undo" and "redo" are no-ops when history.lenght is 0', t => {
 })
 
 test('"undo" rewinds state history', t => {
-  const state = stated(states)
+  const state = stated(states, true)
   state.to(state.actions.FROZEN)
   state.to(state.actions.BOILED)
   state.undo()
@@ -181,7 +181,7 @@ test('"undo" rewinds state history', t => {
 })
 
 test('"redo" applies previously recorded states', t => {
-  const state = stated(states)
+  const state = stated(states, true)
   state.to(state.actions.FROZEN)
   state.to(state.actions.BOILED)
   state.undo()
@@ -209,7 +209,7 @@ test('"onLeave" function is executed when exiting a state', t => {
       WARMED: 'initial',
       value: '32F'
     }
-  })
+  }, true)
   state.to(state.actions.FROZEN)
 })
 
@@ -224,6 +224,6 @@ test('"onEnter" function is executed when a state is entered', t => {
       value: '32F',
       onEnter: () => t.pass()
     }
-  })
+  }, true)
   state.to(state.actions.FROZEN)
 })

@@ -19,14 +19,14 @@ const { Stated } = require('@mjstahl/stated')
 
 ## API
 
-`stated(states: Object[, persistant: Boolean]) -> Stated`
+`stated(states: Object[, persistent: Boolean]) -> Stated`
 
-`new Stated(states: Object[, persistant: Boolean]) -> Stated`
+`new Stated(states: Object[, persistent: Boolean]) -> Stated`
 
 To create an instance of Stated pass a 'states' object. A valid states object
 must, at a minimum, have an 'initial' state object.
 
-By default each Stated object is persistant and stores each state change,
+By default each Stated object is persistent and stores each state change,
 allowing the user to `undo` and `redo` states. Passing `false` as the
 second argument to the constructor will turn this behavior off.
 
@@ -156,7 +156,7 @@ h20.to(h20.actions.FROZEN)
 `.onEnter() -> Void`
 
 Executed after the state and values have been updated, history has recorded (if
-persistant), and `'transition'` event has been emitted.
+persistent), and `'transition'` event has been emitted.
 
 ```js
 const h20 = stated({
@@ -197,20 +197,25 @@ object passed the only argument to the callback.
   unbind()
 ```
 
-## Persistance
+## Persistence
 
-By default each Stated object is persistant and stores each state change,
-allowing the user to `undo` and `redo` states.
+Each Stated object is can be persistent and store each state change,
+allowing the user to `undo` and `redo` states. Use can turn persistence
+on and off with the `persistent` property. You can make Stated object
+persistent by default by passing `true` as the second argument to the
+constructor.
 
-`<stated>.persistant -> Boolean`
+`<stated>.persistent -> Boolean`
+
+`new Stated({... states, true})`
 
 Toggle whether the Stated object will store each state change.
 
 ```js
-h20.persistant //-> true, Stated objects are persistant by default
+h20.persistant //-> false, Stated objects are not persistent by default
 
-// To turn off persistance, simply set 'persistant' to 'false'
-h20.persistant = false
+// To turn on persistence, simply set 'persistent' to 'true'
+h20.persistent = true
 ```
 
 `<stated>.undo() -> Stated`

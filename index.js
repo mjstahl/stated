@@ -2,7 +2,7 @@ const autoBind = require('auto-bind')
 const Emitter = require('nanoevents')
 
 class Stated {
-  constructor (states, persistant = true) {
+  constructor (states, persistent = false) {
     autoBind(this)
 
     this.emitter = new Emitter()
@@ -13,7 +13,7 @@ class Stated {
     this.__states = states
 
     this.__history = []
-    this.persistant = persistant
+    this.persistent = persistent
 
     this.__transition('initial')
   }
@@ -50,7 +50,7 @@ class Stated {
   }
 
   redo () {
-    if (!this.persistant) {
+    if (!this.persistent) {
       return this
     }
     if (this.__current === this.__history.length - 1) {
@@ -76,7 +76,7 @@ class Stated {
   }
 
   undo () {
-    if (!this.persistant || this.__current === 0) {
+    if (!this.persistent || this.__current === 0) {
       return this
     }
     this.__current = this.__current - 1
@@ -101,7 +101,7 @@ class Stated {
 
     this.state = state
     if (updateValue) { this.value = updateValue }
-    if (this.persistant && record) { this.__recordHistory() }
+    if (this.persistent && record) { this.__recordHistory() }
     this.emitter.emit('transition', this)
 
     const onEnter = this.__states[state].onEnter
@@ -109,5 +109,5 @@ class Stated {
   }
 }
 
-exports = module.exports = (states) => new Stated(states)
+exports = module.exports = (states, persistent) => new Stated(states, persistent)
 exports.Stated = Stated
