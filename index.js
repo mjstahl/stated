@@ -1,5 +1,9 @@
 const Emitter = require('nanoevents')
 
+const NOT_ACTIONS = [
+  'canEnter', 'canLeave', 'initial', 'onEnter', 'onLeave', 'value'
+]
+
 class Stated {
   constructor (states, persistent = false) {
     this.__emitter = new Emitter()
@@ -17,12 +21,14 @@ class Stated {
   }
 
   get actions () {
-    const notActions = ['canEnter', 'canLeave', 'onEnter', 'onLeave', 'value']
-    const actions = {}
-    Object.keys(this.__states[this.state])
-      .filter(s => !notActions.includes(s))
-      .forEach(a => { actions[a] = a })
-    return actions
+    let possible = Object.keys(this.__states[this.state])
+      .filter(p => !NOT_ACTIONS.includes(p))
+    if (possible.length === 0) {
+      possible = Object.keys(this.__states)
+        .filter(p => !NOT_ACTIONS.includes(p))
+    }
+    return possible
+      .reduce((actions, p) => Object.assign(actions, { [p]: p }), {})
   }
 
   get value () {
@@ -59,12 +65,14 @@ class Stated {
   }
 
   to (action, updateValue) {
-    const transitionTo = this.__states[this.state][action]
+    let transitionTo = null
+    if (Object.keys(this.actions).length > 0) {
+      transitionTo = this.__states[this.state][action]
+    } else {
+      transitionTo = this.__states[action]
+    }
     if (!transitionTo) {
       throw new Error(`'${action}' does not exist as an action of '${this.state}'`)
-    }
-    if (typeof transitionTo !== 'string') {
-      throw new Error(`'${transitionTo}' is not a valid state. It must be a string.`)
     }
     if (!this.__states[transitionTo]) {
       throw new Error(`'${transitionTo}' does not exist`)

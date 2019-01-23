@@ -46,22 +46,6 @@ test('transition to new state', t => {
     'updated actions are correct')
 })
 
-test('has allows an update to state w/ primitive', t => {
-  t.plan(1)
-  const state = stated(states)
-  state.to(state.actions.FROZEN, '75F')
-  t.is(state.value, '75F',
-    'value is correctly set to states value')
-})
-
-test('has allows an update to state w/ object', t => {
-  t.plan(1)
-  const state = stated(states)
-  state.to(state.actions.BOILED, { state: 'gas' })
-  t.deepEqual(state.value, { temp: '212F', state: 'gas' },
-    'value is correctly set to states value')
-})
-
 test('return to initial state', t => {
   t.plan(1)
   const state = stated(states)
@@ -88,32 +72,6 @@ test('to allows an update to state w/ primitive', t => {
 })
 
 test('to allows an update to state w/ object', t => {
-  t.plan(1)
-  const state = stated(states)
-  state.to(state.actions.BOILED, { state: 'gas' })
-  t.deepEqual(state.value, { temp: '212F', state: 'gas' },
-    'value is correctly set to states value')
-})
-
-test('transition to new state using is', t => {
-  t.plan(2)
-  const state = stated(states)
-  state.to(state.actions.FROZEN)
-  t.is(state.state, 'ice',
-    'transitioned to new state successfully')
-  t.deepEqual(state.actions, { BOILED: 'BOILED', WARMED: 'WARMED' },
-    'updated actions are correct')
-})
-
-test('is allows an update to state w/ primitive', t => {
-  t.plan(1)
-  const state = stated(states)
-  state.to(state.actions.FROZEN, '32F')
-  t.is(state.value, '32F',
-    'value is correctly set to states value')
-})
-
-test('is allows an update to state w/ object', t => {
   t.plan(1)
   const state = stated(states)
   state.to(state.actions.BOILED, { state: 'gas' })
@@ -189,7 +147,7 @@ test('"redo" applies previously recorded states', t => {
   t.is(state.state, 'steam', '"undo" undoes single state in history')
 })
 
-test('"actions" does not include "value", "onLeave", "onEnter"', t => {
+test('"actions" do not include "value", "onLeave", "onEnter"', t => {
   t.plan(3)
   const state = stated(states)
   const actions = Object.keys(state.actions)
@@ -199,6 +157,7 @@ test('"actions" does not include "value", "onLeave", "onEnter"', t => {
 })
 
 test('"onEnter" and "onLeave" receive the Stated object', t => {
+  t.plan(3)
   const state = stated({
     initial: 'water',
     water: {
@@ -216,6 +175,7 @@ test('"onEnter" and "onLeave" receive the Stated object', t => {
 })
 
 test('"onLeave" function is executed when exiting a state', t => {
+  t.plan(1)
   const state = stated({
     initial: 'water',
     water: {
@@ -231,6 +191,7 @@ test('"onLeave" function is executed when exiting a state', t => {
 })
 
 test('"onEnter" function is executed when a state is entered', t => {
+  t.plan(1)
   const state = stated({
     initial: 'water',
     water: {
@@ -246,6 +207,7 @@ test('"onEnter" function is executed when a state is entered', t => {
 })
 
 test('"canEnter" and "canLeave" receive the Stated object', t => {
+  t.plan(1)
   const state = stated({
     initial: 'water',
     water: {
@@ -263,6 +225,7 @@ test('"canEnter" and "canLeave" receive the Stated object', t => {
 })
 
 test('"canEnter" is ignored during creation or resetting', t => {
+  t.plan(2)
   const state = stated({
     initial: 'water',
     water: {
@@ -281,6 +244,7 @@ test('"canEnter" is ignored during creation or resetting', t => {
 })
 
 test('"canLeave" function stops a transition when false', t => {
+  t.plan(1)
   const state = stated({
     initial: 'water',
     water: {
@@ -297,6 +261,7 @@ test('"canLeave" function stops a transition when false', t => {
 })
 
 test('"canEnter" function stops a transition when false', t => {
+  t.plan(1)
   const state = stated({
     initial: 'water',
     water: {
@@ -313,6 +278,7 @@ test('"canEnter" function stops a transition when false', t => {
 })
 
 test('"canLeave" is ignored during a reset', t => {
+  t.plan(1)
   const state = stated({
     initial: 'water',
     water: {
@@ -327,4 +293,19 @@ test('"canLeave" is ignored during a reset', t => {
   state.to(state.actions.FROZEN)
   state.reset()
   t.is(state.state, 'water')
+})
+
+test('states without actions can use navigate to all states', t => {
+  t.plan(1)
+  const state = stated({
+    initial: 'water',
+    water: {
+      value: '60F'
+    },
+    ice: {
+      value: '32F',
+      canLeave: () => false
+    }
+  })
+  t.deepEqual(state.actions, { water: 'water', ice: 'ice' })
 })

@@ -1,7 +1,8 @@
 [![Build Status](https://travis-ci.com/mjstahl/stated.svg?branch=master)](https://travis-ci.com/mjstahl/stated)
 
 # Stated
-Simply put state management for your JavaScript application.
+Simply put state management for your JavaScript application. Pushdown automata
+(FSM with history) in less than 800 B.
 
 ## Installation
 
@@ -102,6 +103,9 @@ h20.actions
 `actions` only includes actions related to the current state. So
 attempting to call `to` with an invalid action will cause a runtime error
 as that action does not exist on `<stated>.actions`.
+
+**For a state that does not have any `actions` all the states of the Stated
+object will available from `actions`.**
 
 `<stated>.state -> String`
 
