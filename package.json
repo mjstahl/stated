@@ -1,6 +1,6 @@
 {
   "name": "@mjstahl/stated",
-  "version": "5.2.0",
+  "version": "5.2.1",
   "description": "Simply put state management for your JavaScript application",
   "main": "index.js",
   "scripts": {
@@ -34,8 +34,10 @@
   "dependencies": {
     "nanoevents": "^1.0.8"
   },
-  "size-limit": [{
-    "path": "index.js",
-    "limit": "800 B"
-  }]
+  "size-limit": [
+    {
+      "path": "index.js",
+      "limit": "800 B"
+    }
+  ]
 }
