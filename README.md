@@ -146,7 +146,7 @@ Each state can have an `onLeave` and `onEnter` function that is executed when
 leaving one state, and having entered another. This are useful for performing
 side-effects.
 
-`.onLeave() -> Void`
+`.onLeave(self: Stated) -> Void`
 
 Executed when a transition is to occur but before the current state has been
 replaced with the next state.
@@ -170,7 +170,7 @@ h20.to(h20.actions.FROZEN)
 //-> 'Winter is Coming!!!'
 ```
 
-`.onEnter() -> Void`
+`.onEnter(self: Stated) -> Void`
 
 Executed after the state and values have been updated, history has recorded (if
 persistent), and `'transition'` event has been emitted.

@@ -198,6 +198,23 @@ test('"actions" does not include "value", "onLeave", "onEnter"', t => {
   t.truthy(!actions.includes('onLeave'), '"actions" does not include "onLeave"')
 })
 
+test('"onEnter" and "onLeave" receive the Stated object', t => {
+  const state = stated({
+    initial: 'water',
+    water: {
+      FROZEN: 'ice',
+      value: '60F',
+      onLeave: (self) => t.is(self, state)
+    },
+    ice: {
+      value: '32F',
+      onEnter: (self) => t.is(self, state)
+    }
+  })
+  state.to(state.actions.FROZEN)
+  t.is(state.state, 'ice')
+})
+
 test('"onLeave" function is executed when exiting a state', t => {
   const state = stated({
     initial: 'water',
@@ -234,11 +251,11 @@ test('"canEnter" and "canLeave" receive the Stated object', t => {
     water: {
       FROZEN: 'ice',
       value: '60F',
-      canLeave: (t) => t === state
+      canLeave: (self) => self === state
     },
     ice: {
       value: '32F',
-      canEnter: (t) => t === state
+      canEnter: (self) => self === state
     }
   })
   state.to(state.actions.FROZEN)

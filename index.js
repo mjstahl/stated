@@ -104,7 +104,7 @@ class Stated {
 
     if (this.state) {
       const onLeave = this.__states[this.state].onLeave
-      if (onLeave) onLeave()
+      if (onLeave) onLeave(this)
     }
 
     this.state = state
@@ -113,7 +113,7 @@ class Stated {
     this.__emitter.emit('transition', this)
 
     const onEnter = this.__states[state].onEnter
-    if (onEnter) onEnter()
+    if (onEnter) onEnter(this)
   }
 }
 
