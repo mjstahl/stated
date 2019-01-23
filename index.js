@@ -1,10 +1,11 @@
 const autoBind = require('auto-bind')
-const events = require('events')
+const Emitter = require('nanoevents')
 
-class Stated extends events.EventEmitter {
+class Stated {
   constructor (states, persistant = true) {
-    super()
     autoBind(this)
+
+    this.emitter = new Emitter()
 
     if (!states['initial']) {
       throw new Error(`A valid 'initial' state must be provided`)
@@ -42,6 +43,10 @@ class Stated extends events.EventEmitter {
   initial () {
     this.__transition('initial')
     return this
+  }
+
+  on () {
+    return this.emitter.on.apply(this.emitter, arguments)
   }
 
   redo () {
@@ -97,7 +102,7 @@ class Stated extends events.EventEmitter {
     this.state = state
     if (updateValue) { this.value = updateValue }
     if (this.persistant && record) { this.__recordHistory() }
-    this.emit('transition', this)
+    this.emitter.emit('transition', this)
 
     const onEnter = this.__states[state].onEnter
     if (onEnter) onEnter()

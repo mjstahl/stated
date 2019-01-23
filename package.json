@@ -4,6 +4,7 @@
   "description": "Simply put state management for your JavaScript application",
   "main": "index.js",
   "scripts": {
+    "size": "size-limit index.js",
     "test": "standard --fix && ava"
   },
   "repository": {
@@ -27,10 +28,11 @@
   "homepage": "https://github.com/mjstahl/stated#readme",
   "devDependencies": {
     "ava": "1.0.0-beta.6",
+    "size-limit": "^0.21.1",
     "standard": "^12.0.1"
   },
   "dependencies": {
     "auto-bind": "^2.0.0",
-    "events": "^3.0.0"
+    "nanoevents": "^1.0.8"
   }
 }

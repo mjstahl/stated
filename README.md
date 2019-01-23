@@ -184,12 +184,17 @@ Each stated object is also an EventEmitter. When the Stated object transitions
 from one state to another the `'transition'` event is emitted with the Stated
 object passed the only argument to the callback.
 
+`<stated>.on(callback: Function) -> Function`
+
 ```js
-  h20.on('transition', ({ state, value }) => {
+  const unbind = h20.on('transition', ({ state, value }) => {
     console.log(state) //-> initial
     console.log(value) //-> '60F'
   })
   h20.initial()
+
+  // when you are finished listening
+  unbind()
 ```
 
 ## Persistance
