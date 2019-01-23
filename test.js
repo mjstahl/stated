@@ -209,7 +209,7 @@ test('"onLeave" function is executed when exiting a state', t => {
     ice: {
       value: '32F'
     }
-  }, true)
+  })
   state.to(state.actions.FROZEN)
 })
 
@@ -224,6 +224,90 @@ test('"onEnter" function is executed when a state is entered', t => {
       value: '32F',
       onEnter: () => t.pass()
     }
-  }, true)
+  })
   state.to(state.actions.FROZEN)
+})
+
+test('"canEnter" and "canLeave" receive the Stated object', t => {
+  const state = stated({
+    initial: 'water',
+    water: {
+      FROZEN: 'ice',
+      value: '60F',
+      canLeave: (t) => t === state
+    },
+    ice: {
+      value: '32F',
+      canEnter: (t) => t === state
+    }
+  })
+  state.to(state.actions.FROZEN)
+  t.is(state.state, 'ice')
+})
+
+test('"canEnter" is ignored during creation or resetting', t => {
+  const state = stated({
+    initial: 'water',
+    water: {
+      FROZEN: 'ice',
+      value: '60F',
+      canEnter: () => false
+    },
+    ice: {
+      value: '32F'
+    }
+  })
+  t.is(state.state, 'water')
+  state.to(state.actions.FROZEN)
+  state.reset()
+  t.is(state.state, 'water')
+})
+
+test('"canLeave" function stops a transition when false', t => {
+  const state = stated({
+    initial: 'water',
+    water: {
+      FROZEN: 'ice',
+      value: '60F',
+      canLeave: () => false
+    },
+    ice: {
+      value: '32F'
+    }
+  })
+  state.to(state.actions.FROZEN)
+  t.is(state.state, 'water')
+})
+
+test('"canEnter" function stops a transition when false', t => {
+  const state = stated({
+    initial: 'water',
+    water: {
+      FROZEN: 'ice',
+      value: '60F'
+    },
+    ice: {
+      value: '32F',
+      canEnter: () => false
+    }
+  })
+  state.to(state.actions.FROZEN)
+  t.is(state.state, 'water')
+})
+
+test('"canLeave" is ignored during a reset', t => {
+  const state = stated({
+    initial: 'water',
+    water: {
+      FROZEN: 'ice',
+      value: '60F'
+    },
+    ice: {
+      value: '32F',
+      canLeave: () => false
+    }
+  })
+  state.to(state.actions.FROZEN)
+  state.reset()
+  t.is(state.state, 'water')
 })

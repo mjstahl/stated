@@ -13,11 +13,11 @@ class Stated {
     this.__history = []
     this.persistent = persistent
 
-    this.__transition(initial)
+    this.__transition(initial, undefined, false)
   }
 
   get actions () {
-    const notActions = ['onEnter', 'onLeave', 'value']
+    const notActions = ['canEnter', 'canLeave', 'onEnter', 'onLeave', 'value']
     const actions = {}
     Object.keys(this.__states[this.state])
       .filter(s => !notActions.includes(s))
@@ -54,7 +54,7 @@ class Stated {
   }
 
   reset () {
-    this.__transition(this.__states['initial'])
+    this.__transition(this.__states['initial'], undefined, false)
     return this
   }
 
@@ -88,11 +88,21 @@ class Stated {
 
   __changeHistory () {
     const { state, value } = this.__history[this.__current]
-    this.__transition(state, value, false)
+    this.__transition(state, value, true, false)
   }
 
-  __transition (state, updateValue, record = true) {
-    if (this.__history.length !== 0) {
+  __transition (state, updateValue, guard = true, record = true) {
+    const canLeave = this.state && this.__states[this.state].canLeave
+    if (guard && canLeave && !canLeave(this)) {
+      return this
+    }
+
+    const canEnter = this.__states[state].canEnter
+    if (guard && canEnter && !canEnter(this)) {
+      return this
+    }
+
+    if (this.state) {
       const onLeave = this.__states[this.state].onLeave
       if (onLeave) onLeave()
     }

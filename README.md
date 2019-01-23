@@ -125,6 +125,21 @@ if not.
   //-> '60F'
 ```
 
+## Guards
+
+Each state may have a `canEnter` and `canLeave` function that is executed
+when attempting to leave one state and enter another. Each function takes
+one argument, the Stated object, for use during its execution.
+
+When a transition is occurring (via the `on` method), if there is a `canLeave` function on the current state, it is executed. If the `canLeave` function returns `true` and the future state has a `canEnter` function, the `canEnter` function is
+executed. If the `canEnter` function of the future state returns true, the Stated object is transitioned successfully.
+
+If either the `canLeave` or `canEnter` functions exist and return false, the transition does not occur.
+
+`.canLeave(self: Stated) -> Boolean`
+
+`.canEnter(self: Stated) -> Boolean`
+
 ## Transition Functions
 
 Each state can have an `onLeave` and `onEnter` function that is executed when
