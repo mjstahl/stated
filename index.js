@@ -1,4 +1,5 @@
 const Emitter = require('nanoevents')
+const autobind = require('./bind')
 
 const NOT_ACTIONS = [
   'canEnter', 'canLeave', 'initial', 'onEnter', 'onLeave', 'value'
@@ -6,6 +7,8 @@ const NOT_ACTIONS = [
 
 class Stated {
   constructor (states, persistent = false) {
+    autobind(this)
+
     this.__emitter = new Emitter()
     this.__states = states
 

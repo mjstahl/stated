@@ -2,7 +2,7 @@
 
 # Stated
 Simply put state management for your JavaScript application. Pushdown automata
-(FSM with history) in less than 800 B.
+(FSM with history) in less than 900 B.
 
 ## Installation
 
