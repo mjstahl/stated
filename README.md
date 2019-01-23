@@ -24,15 +24,16 @@ const { Stated } = require('@mjstahl/stated')
 `new Stated(states: Object[, persistent: Boolean]) -> Stated`
 
 To create an instance of Stated pass a 'states' object. A valid states object
-must, at a minimum, have an 'initial' state object.
+must have an, at least, a single state and an 'initial' property referencing
+that state by its name.
 
-By default each Stated object is persistent and stores each state change,
-allowing the user to `undo` and `redo` states. Passing `false` as the
-second argument to the constructor will turn this behavior off.
+By default each Stated object is not persistent. If you wish to store
+each state change pass 'true' as the second argument to the constructor.
 
 ```js
 const h20 = stated({
-  initial: {
+  initial: 'water',
+  water: {
     // actions must reference existing states
     FROZEN: 'ice',
     BOILED: 'steam',
@@ -75,14 +76,14 @@ is an Object, the current value and `updateValue` will be merged. If the
   h20.value //-> { state: 'gas', temp: '212F' }
 ```
 
-`<stated>.initial() -> Stated`
+`<stated>.reset() -> Stated`
 
-Set the Stated object's state to 'initial'.
+Set the Stated object's state to initial state.
 
 ```js
-  h20.initial()
+  h20.reset()
 
-  h20.state //-> 'initial'
+  h20.state //-> 'water'
   h20.value //-> '60F'
 ```
 
@@ -137,13 +138,14 @@ replaced with the next state.
 
 ```js
 const h20 = stated({
-  initial: {
+  initial: 'water',
+  water: {
     FROZEN: 'ice',
     value: '60F'
     onLeave: () => console.log('Winter is Coming!!!')
   },
   ice: {
-    WARMED: 'initial',
+    WARMED: 'water',
     value: '32F'
   },
 })
@@ -160,13 +162,14 @@ persistent), and `'transition'` event has been emitted.
 
 ```js
 const h20 = stated({
-  initial: {
+  initial: 'water',
+  water: {
     FROZEN: 'ice',
     value: '60F'
     onLeave: () => console.log('Winter is Coming!!!')
   },
   ice: {
-    WARMED: 'initial',
+    WARMED: 'water',
     value: '32F'
     onEnter: () => console.log('Winter is Here!!!')
   },
@@ -188,10 +191,10 @@ object passed the only argument to the callback.
 
 ```js
   const unbind = h20.on('transition', ({ state, value }) => {
-    console.log(state) //-> initial
+    console.log(state) //-> 'water'
     console.log(value) //-> '60F'
   })
-  h20.initial()
+  h20.reset()
 
   // when you are finished listening
   unbind()
@@ -220,16 +223,16 @@ h20.persistent = true
 
 `<stated>.undo() -> Stated`
 
-Return to a previous state. If the current state is `'inital'` and `undo` is
-called, the Stated object will be returned without performing a state
-transition (in the `'initial'` state).
+Return to a previous state. If the current state is the initial state and
+`undo` is called, the Stated object will be returned without performing a
+state transition (in the initial state).
 
 ```js
   h20.to(h20.actions.FROZEN)
   h20.state //-> 'ice'
 
   h20.undo()
-  h20.state //-> 'initial'
+  h20.state //-> 'water'
 ```
 
 `<stated>.redo() -> Stated`
@@ -244,7 +247,7 @@ top of the stack).
   h20.state //-> 'ice'
 
   h20.undo()
-  h20.state //-> 'initial'
+  h20.state //-> 'water'
 
   h20.redo()
   h20.state //-> 'ice'

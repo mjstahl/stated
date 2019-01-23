@@ -5,17 +5,18 @@ class Stated {
   constructor (states, persistent = false) {
     autoBind(this)
 
-    this.emitter = new Emitter()
+    this.__emitter = new Emitter()
+    this.__states = states
 
-    if (!states['initial']) {
+    const initial = states['initial']
+    if (!initial && states[initial]) {
       throw new Error(`A valid 'initial' state must be provided`)
     }
-    this.__states = states
 
     this.__history = []
     this.persistent = persistent
 
-    this.__transition('initial')
+    this.__transition(initial)
   }
 
   get actions () {
@@ -40,13 +41,8 @@ class Stated {
     }
   }
 
-  initial () {
-    this.__transition('initial')
-    return this
-  }
-
   on () {
-    return this.emitter.on.apply(this.emitter, arguments)
+    return this.__emitter.on.apply(this.__emitter, arguments)
   }
 
   redo () {
@@ -58,6 +54,11 @@ class Stated {
     }
     this.__current = this.__current + 1
     this.__changeHistory()
+  }
+
+  reset () {
+    this.__transition(this.__states['initial'])
+    return this
   }
 
   to (action, updateValue) {
@@ -102,7 +103,7 @@ class Stated {
     this.state = state
     if (updateValue) { this.value = updateValue }
     if (this.persistent && record) { this.__recordHistory() }
-    this.emitter.emit('transition', this)
+    this.__emitter.emit('transition', this)
 
     const onEnter = this.__states[state].onEnter
     if (onEnter) onEnter()

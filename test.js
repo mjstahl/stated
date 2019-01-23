@@ -2,7 +2,8 @@ const test = require('ava')
 const stated = require('./index')
 
 const states = {
-  initial: {
+  initial: 'water',
+  water: {
     FROZEN: 'ice',
     BOILED: 'steam',
     value: '60F'
@@ -25,7 +26,7 @@ test('newly created instance', t => {
   t.plan(4)
   const state = stated(states)
   t.truthy(state, 'Stated created successfully')
-  t.is(state.state, 'initial',
+  t.is(state.state, state.__states['initial'],
     'initial state is correct')
   t.is(state.value, '60F',
     'value is correctly set to states value')
@@ -64,8 +65,7 @@ test('has allows an update to state w/ object', t => {
 test('return to initial state', t => {
   t.plan(1)
   const state = stated(states)
-  state.to(state.actions.FROZEN)
-  state.initial()
+  state.reset()
   t.is(state.value, '60F', 'value is correctly set to initial value')
 })
 
@@ -150,7 +150,7 @@ test('persists history when second argument is true, starting with "initial"', t
   t.is(state.__history.length, 1, 'history is persisted with "initial" state')
   const current = state.__current
   t.is(state.__current, 0, 'state pointer is set to the first state in history')
-  t.is(state.__history[current].state, 'initial', '"initial" state is in history')
+  t.is(state.__history[current].state, state.__states['initial'], '"initial" state is in history')
 })
 
 test('turning on "persistent" will start recording history', t => {
@@ -163,13 +163,13 @@ test('turning on "persistent" will start recording history', t => {
   t.is(state.__history.length, 1, 'turning off persistent does not add history')
 })
 
-test('"undo" and "redo" are no-ops when history.lenght is 0', t => {
+test('"undo" and "redo" are no-ops when history.length is 0', t => {
   t.plan(2)
   const state = stated(states)
   state.undo()
-  t.is(state.state, 'initial', '"undo" will not go below 0')
+  t.is(state.state, state.__states['initial'], '"undo" will not go below 0')
   state.redo()
-  t.is(state.state, 'initial', '"redo" will not exceed __history.lenght - 1')
+  t.is(state.state, state.__states['initial'], '"redo" will not exceed __history.lenght - 1')
 })
 
 test('"undo" rewinds state history', t => {
@@ -200,13 +200,13 @@ test('"actions" does not include "value", "onLeave", "onEnter"', t => {
 
 test('"onLeave" function is executed when exiting a state', t => {
   const state = stated({
-    initial: {
+    initial: 'water',
+    water: {
       FROZEN: 'ice',
       value: '60F',
       onLeave: () => t.pass()
     },
     ice: {
-      WARMED: 'initial',
       value: '32F'
     }
   }, true)
@@ -215,12 +215,12 @@ test('"onLeave" function is executed when exiting a state', t => {
 
 test('"onEnter" function is executed when a state is entered', t => {
   const state = stated({
-    initial: {
+    initial: 'water',
+    water: {
       FROZEN: 'ice',
       value: '60F'
     },
     ice: {
-      WARMED: 'initial',
       value: '32F',
       onEnter: () => t.pass()
     }
