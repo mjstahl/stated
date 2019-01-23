@@ -32,7 +32,6 @@
     "standard": "^12.0.1"
   },
   "dependencies": {
-    "auto-bind": "^2.0.0",
     "nanoevents": "^1.0.8"
   }
 }

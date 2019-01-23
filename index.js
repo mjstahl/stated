@@ -1,10 +1,7 @@
-const autoBind = require('auto-bind')
 const Emitter = require('nanoevents')
 
 class Stated {
   constructor (states, persistent = false) {
-    autoBind(this)
-
     this.__emitter = new Emitter()
     this.__states = states
 
@@ -20,8 +17,8 @@ class Stated {
   }
 
   get actions () {
-    const actions = {}
     const notActions = ['onEnter', 'onLeave', 'value']
+    const actions = {}
     Object.keys(this.__states[this.state])
       .filter(s => !notActions.includes(s))
       .forEach(a => { actions[a] = a })
