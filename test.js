@@ -296,7 +296,7 @@ test('"canLeave" is ignored during a reset', t => {
 })
 
 test('states without actions can use navigate to all states', t => {
-  t.plan(1)
+  t.plan(2)
   const state = stated({
     initial: 'water',
     water: {
@@ -308,6 +308,9 @@ test('states without actions can use navigate to all states', t => {
     }
   })
   t.deepEqual(state.actions, { water: 'water', ice: 'ice' })
+
+  state.to(state.actions.water)
+  t.is(state.state, 'water')
 })
 
 test('"initial" state is no longer required', t => {

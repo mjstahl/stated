@@ -70,13 +70,8 @@ class Stated {
   }
 
   to (action, updateValue) {
-    let transitionTo = null
-    if (Object.keys(this.actions).length > 0) {
-      const state = this.__states[this.state]
-      transitionTo = state && state[action]
-    } else {
-      transitionTo = this.__states[action]
-    }
+    const state = this.__states[this.state]
+    const transitionTo = (state && state[action]) ? state[action] : action
     if (!transitionTo) {
       throw new Error(`'${action}' does not exist as an action of '${this.state}'`)
     }
