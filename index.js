@@ -47,8 +47,8 @@ class Stated {
     }
   }
 
-  on () {
-    return this.__emitter.on.apply(this.__emitter, arguments)
+  onTransition (callback) {
+    return this.__emitter.on('transition', callback)
   }
 
   redo () {

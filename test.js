@@ -91,7 +91,7 @@ test('export as object', t => {
 test('emits "transition" event when state is changed', t => {
   t.plan(3)
   const state = stated(states)
-  state.on('transition', ({ state, actions, value }) => {
+  state.onTransition(({ state, actions, value }) => {
     t.truthy(actions.BOILED,
       '"actions" property is available on the argument')
     t.is(state, 'ice',
