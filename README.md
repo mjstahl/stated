@@ -25,8 +25,8 @@ const { Stated } = require('@mjstahl/stated')
 `new Stated(states: Object[, persistent: Boolean]) -> Stated`
 
 To create an instance of Stated pass a 'states' object. A valid states object
-must have an, at least, a single state and an 'initial' property referencing
-that state by its name.
+must have an, at least, a single state. `initial` states can be set after
+instantiation by assign a valid state to the `initial` property.
 
 By default each Stated object is not persistent. If you wish to store
 each state change pass 'true' as the second argument to the constructor.
