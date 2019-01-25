@@ -309,3 +309,20 @@ test('states without actions can use navigate to all states', t => {
   })
   t.deepEqual(state.actions, { water: 'water', ice: 'ice' })
 })
+
+test('"initial" state is no longer required', t => {
+  t.plan(2)
+  const state = stated({
+    water: {
+      value: '60F'
+    },
+    ice: {
+      value: '32F',
+      canLeave: () => false
+    }
+  })
+  t.is(state.state, undefined)
+
+  state.initial = state.actions.water
+  t.is(state.state, 'water')
+})

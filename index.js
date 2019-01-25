@@ -12,26 +12,28 @@ class Stated {
     this.__emitter = new Emitter()
     this.__states = states
 
-    const initial = states['initial']
-    if (!initial && states[initial]) {
-      throw new Error(`A valid 'initial' state must be provided`)
-    }
-
     this.__history = []
     this.persistent = persistent
 
-    this.__transition(initial, undefined, false)
+    const initial = states['initial']
+    if (initial) {
+      this.__transition(initial, undefined, false)
+    }
   }
 
   get actions () {
-    let possible = Object.keys(this.__states[this.state])
+    let possible = this.state && Object.keys(this.__states[this.state])
       .filter(p => !NOT_ACTIONS.includes(p))
-    if (possible.length === 0) {
+    if (!possible || possible.length === 0) {
       possible = Object.keys(this.__states)
         .filter(p => !NOT_ACTIONS.includes(p))
     }
     return possible
       .reduce((actions, p) => Object.assign(actions, { [p]: p }), {})
+  }
+
+  set initial (initial) {
+    this.__transition(initial)
   }
 
   get value () {
@@ -108,7 +110,7 @@ class Stated {
       return this
     }
 
-    const canEnter = this.__states[state].canEnter
+    const canEnter = this.state && this.__states[state].canEnter
     if (guard && canEnter && !canEnter(this)) {
       return this
     }
