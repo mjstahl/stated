@@ -72,7 +72,8 @@ class Stated {
   to (action, updateValue) {
     let transitionTo = null
     if (Object.keys(this.actions).length > 0) {
-      transitionTo = this.__states[this.state][action]
+      const state = this.__states[this.state]
+      transitionTo = state && state[action]
     } else {
       transitionTo = this.__states[action]
     }
