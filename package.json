@@ -1,6 +1,6 @@
 {
   "name": "@mjstahl/stated",
-  "version": "6.1.5",
+  "version": "6.2.0",
   "description": "Simply put state management for your JavaScript application",
   "main": "index.js",
   "scripts": {
