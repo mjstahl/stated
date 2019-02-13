@@ -203,13 +203,12 @@ h20.to(h20.actions.FROZEN)
 ## Events
 
 Each stated object is also an EventEmitter. When the Stated object transitions
-from one state to another the `'transition'` event is emitted with the Stated
-object passed the only argument to the callback.
+from one state to another all callbacks passed to the `onTransition` function are evaluated with the Stated object passed the only argument to the callback. `onTransition` returns a function that unsubscribes when executed.
 
-`<stated>.on(callback: Function) -> Function`
+`<stated>.onTransition(callback: Function) -> unsubscribe: Function`
 
 ```js
-  const unbind = h20.on('transition', ({ state, value }) => {
+  const unbind = h20.onTransition(({ state, value }) => {
     console.log(state) //-> 'water'
     console.log(value) //-> '60F'
   })
