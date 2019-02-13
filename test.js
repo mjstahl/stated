@@ -34,6 +34,13 @@ test('newly created instance', t => {
     'initial actions are correct')
 })
 
+test('via returns the names of states that actions point to', t => {
+  t.plan(1)
+  const state = stated(states)
+  t.deepEqual(state.via, { FROZEN: 'ice', BOILED: 'steam' },
+    'initial via values are correct')
+})
+
 test('transition to new state', t => {
   t.plan(3)
   const state = stated(states)

@@ -2,7 +2,7 @@
 
 # Stated
 Simply put state management for your JavaScript application. Pushdown automata
-(FSM with history) in less than 900 B.
+(FSM with history) in less than 1KB.
 
 ## Installation
 
@@ -127,6 +127,18 @@ if not.
   h20.value
 
   //-> '60F'
+```
+
+`<stated>.via -> Object`
+
+Return an object with actions as properties and the state they point to as
+values.
+
+```js
+h20.to(h20.actions.FROZEN)
+h20.via
+
+//-> { BOILED: 'steam', WARMED: 'water' }
 ```
 
 ## Guards

@@ -22,13 +22,7 @@ class Stated {
   }
 
   get actions () {
-    let possible = this.state && Object.keys(this.__states[this.state])
-      .filter(p => !NOT_ACTIONS.includes(p))
-    if (!possible || possible.length === 0) {
-      possible = Object.keys(this.__states)
-        .filter(p => !NOT_ACTIONS.includes(p))
-    }
-    return possible
+    return this.__possibleTransitions()
       .reduce((actions, p) => Object.assign(actions, { [p]: p }), {})
   }
 
@@ -47,6 +41,12 @@ class Stated {
     } else {
       this.__states[this.state].value = update
     }
+  }
+
+  get via () {
+    const state = this.__states[this.state]
+    return this.__possibleTransitions()
+      .reduce((actions, p) => Object.assign(actions, { [p]: state[p] }), {})
   }
 
   onTransition (callback) {
@@ -88,6 +88,16 @@ class Stated {
     }
     this.__current = this.__current - 1
     this.__changeHistory()
+  }
+
+  __possibleTransitions () {
+    let possible = this.state && Object.keys(this.__states[this.state])
+      .filter(p => !NOT_ACTIONS.includes(p))
+    if (!possible || possible.length === 0) {
+      possible = Object.keys(this.__states)
+        .filter(p => !NOT_ACTIONS.includes(p))
+    }
+    return possible
   }
 
   __recordHistory () {
